@@ -22,7 +22,10 @@ export const SearchResults = ({currentResults, performSearch, debugMode = "OFF"}
               })}
             </div>):null}
             <div className="flex-row">
-              <strong>Published By</strong>: {resultItem.package.publisher.username} {Moment(resultItem.package.date).format('Y-M-D HH:mm:ss')}
+              <span className="search-result-publisher-name">{resultItem.package.publisher.username}</span> published <span className="search-result-version">Version {resultItem.package.version}</span>
+            </div>
+            <div>
+              {Moment(resultItem.package.date).format('Y-M-D HH:mm:ss')}
             </div>
           </div>
         )})}
