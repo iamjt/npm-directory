@@ -1,0 +1,29 @@
+.custom-option {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 1rem;
+    transition: 0.15s background-color ease-in-out;
+    border-bottom: 1px solid lightgray;
+  }
+  
+  .custom-option:last-of-type {
+    border-bottom: none;
+  }
+  
+  .custom-option:hover {
+    background-color: lightsteelblue;
+  }
+  
+  .custom-option-header {
+    display: flex;
+    flex: 1 1;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .custom-option-version, .custom-option-desc {
+    display: flex;
+    font-size: 0.75;
+    color: gray;
+  }

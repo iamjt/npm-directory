@@ -1,0 +1,25 @@
+.header {
+    display: flex;
+    flex: 1 1;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0rem 1rem;
+    background: steelblue;
+    color: white;
+}
+
+.debug {
+    display: flex;
+    flex-direction: row;
+}
+
+.debug-label, .debug-control {
+    flex-direction: column;
+    align-self: center;
+    justify-content: center;
+}
+
+.debug-label {
+    font-weight: strong;
+    padding-right: 0.5rem;
+}
