@@ -10,6 +10,9 @@ const SEARCH_SCORE_THRESHOLD = "0.025";
 type props = {};
 type state = { 
   debugMode: string
+  objects: any[],
+  total: number,
+  time: string
 };
 
 class App extends React.Component<props, state> {
@@ -17,14 +20,22 @@ class App extends React.Component<props, state> {
   constructor(props) {
     super (props);
     this.state = {
-      debugMode: "OFF"
+      debugMode: "OFF", 
+      objects: null, 
+      total: null,
+      time: null
     };
 
     this.updateDebugger = this.updateDebugger.bind(this);
+    this.performSearch = this.performSearch.bind(this);
   }
 
   componentDidMount() {
-    this.performSearch();
+
+    //On component mount, initiate an initial search for react
+    this.performSearch({
+      value: "react"
+    });
   }
 
   updateDebugger(event) {
@@ -32,7 +43,8 @@ class App extends React.Component<props, state> {
   }
 
   //Function to populate the async dropdown menu on input
-  //This function will only retrieve NPM's default search size of 20
+  //This function will only retrieve based on NPM's default search size of 20
+  //FInal result will be less since there is a search score filter
   shortlistSearch (searchVal, callback) {
     const searchPromise = fetch(NPM_REGISTRY+searchVal);
     searchPromise.then(response => {
@@ -79,28 +91,37 @@ class App extends React.Component<props, state> {
   //Similar to the shortlisting above
   //But this function will handle results of N sizes
   //Default search result size is 100 because we need to do pagination
-  performSearch() {
-
-    const testSearchVal = "React";
+  performSearch(event) {
+    this.setState({
+      objects:null,
+      total: null,
+      time:null
+    })
 
     //Deal with empty input
     let searchURL;
-    if(!testSearchVal || testSearchVal.trim().length == 0) {
+    if(!event || event.value.trim().length == 0) {
       return;
     } else {
       //Search for the desired terms and set the default search size to 100
-      searchURL = NPM_REGISTRY+testSearchVal.trim();
+      searchURL = NPM_REGISTRY+event.value.trim()+'&size=100';
     }
 
     fetch(searchURL).then(searchResponse => {
       if(searchResponse.ok) {
         searchResponse.json().then(data => {
+          
+          //Put in 
+          for(let i=0; i < data.objects.length; i++) {
+            data.objects[i].package.trackingIndex = i;
+          }
 
+          this.setState(data);
         });
       } else {
         //Error Handling
-      }    
-    });
+      }
+    })
   }
 
   render() {
