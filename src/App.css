@@ -23,3 +23,13 @@
     font-weight: strong;
     padding-right: 0.5rem;
 }
+
+.search-container {
+    background-color: lightgray;
+    padding: 1rem;
+}
+
+.search-tools-container {
+    padding: 1rem;
+    font-size: 0.75rem;
+  }

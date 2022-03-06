@@ -1,6 +1,7 @@
 import React from 'react';
 import AsyncSelect from "react-select/async";
 import { customOption, customMenu } from './templates/AsyncTemplates';
+import { SearchResults } from './templates/SearchResults';
 
 import './App.css';
 
@@ -12,7 +13,8 @@ type state = {
   debugMode: string
   objects: any[],
   total: number,
-  time: string
+  time: string,
+  lastSearchVal: string
 };
 
 class App extends React.Component<props, state> {
@@ -20,6 +22,7 @@ class App extends React.Component<props, state> {
   constructor(props) {
     super (props);
     this.state = {
+      lastSearchVal: null,
       debugMode: "OFF", 
       objects: null, 
       total: null,
@@ -111,12 +114,12 @@ class App extends React.Component<props, state> {
       if(searchResponse.ok) {
         searchResponse.json().then(data => {
           
-          //Put in 
           for(let i=0; i < data.objects.length; i++) {
             data.objects[i].package.trackingIndex = i;
           }
 
           this.setState(data);
+          this.setState({lastSearchVal: event.value.trim()})
         });
       } else {
         //Error Handling
@@ -145,12 +148,20 @@ class App extends React.Component<props, state> {
         </div>
         <div className="search-container">
           <AsyncSelect
+            autoFocus
             placeholder="Search NPM..."
             onChange={this.performSearch}
             loadOptions={this.shortlistSearch} 
             components={{Option: customOption, DropdownIndicator: null, IndicatorSeparator: null, Menu: customMenu}}></AsyncSelect>
         </div>
-        {this.state.debugMode?(<div>{this.state.debugMode}</div>):null}
+        {(this.state.objects && this.state.objects.length > 0)?(
+          <div className='search-tools-container'>
+            <div>Displaying {this.state.objects.length} of {this.state.total} possible results for "<strong>{this.state.lastSearchVal}</strong>"</div>
+          </div>
+        ):null}
+        {(this.state.objects && this.state.objects.length > 0)?
+          (<SearchResults currentResults={this.state.objects} performSearch={this.performSearch} debugMode={this.state.debugMode}/>):null
+        }
       </div>
     )
   }
