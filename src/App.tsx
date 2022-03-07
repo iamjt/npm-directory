@@ -20,7 +20,8 @@ type state = {
   currentItems: any[],
   pageCount: number, 
   itemOffset: number,
-  itemsPerPage: number
+  itemsPerPage: number,
+  pageRangeDisplayed: number
 };
 
 class App extends React.Component<props, state> {
@@ -36,7 +37,8 @@ class App extends React.Component<props, state> {
       currentItems:null,
       pageCount: null,
       itemOffset: null,
-      itemsPerPage: ITEMS_PER_PAGE
+      itemsPerPage: ITEMS_PER_PAGE,
+      pageRangeDisplayed: 5
     };
 
     this.updateDebugger = this.updateDebugger.bind(this);
@@ -49,6 +51,12 @@ class App extends React.Component<props, state> {
     this.performSearch({
       value: "react"
     });
+
+    if (window.innerWidth <= 760) {
+      this.setState({pageRangeDisplayed: 0});
+    } else {
+      this.setState({pageRangeDisplayed: 5});
+    }
   }
 
   updateDebugger(event) {
@@ -198,7 +206,7 @@ class App extends React.Component<props, state> {
               nextLabel="next"
               previousLabel="previous"
               onPageChange={this.handlePageClick}
-              pageRangeDisplayed={5}
+              pageRangeDisplayed={this.state.pageRangeDisplayed}
               pageCount={this.state.pageCount}
               renderOnZeroPageCount={null}/>
           </div>):null}
