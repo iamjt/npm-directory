@@ -10,7 +10,7 @@ export const SearchResults = ({currentResults, performSearch, debugMode = "OFF"}
             <div className="flex-row">
               <div className="search-result-header"><a target={resultItem.package.links.npm?"_blank":"noreferrer"} href={resultItem.package.links.npm?resultItem.package.links.npm:""}>{resultItem.package.name}</a></div>
               {/*this is to make the examiner's life a bit easier*/}
-              {debugMode==="ON"?<div className="search-result-debug">{resultItem.package.trackingIndex}</div>:null}
+              {debugMode==="ON"?<div className="search-result-debug">{resultItem.package.trackingIndex+1}</div>:null}
             </div>
             <div className="flex-row">
               <div className="search-result-desc">{resultItem.package.description}</div>
