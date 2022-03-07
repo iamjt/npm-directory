@@ -152,6 +152,8 @@ class App extends React.Component<props, state> {
       itemOffset: newOffset, 
       pageCount: Math.ceil(this.state.objects.length / this.state.itemsPerPage),
     });
+
+    window.scrollTo(0, 0);
   };
 
   render() {
