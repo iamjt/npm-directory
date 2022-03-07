@@ -2,11 +2,13 @@ import React from 'react';
 import AsyncSelect from "react-select/async";
 import { customOption, customMenu } from './templates/AsyncTemplates';
 import { SearchResults } from './templates/SearchResults';
+import ReactPaginate from 'react-paginate';
 
 import './App.css';
 
 const NPM_REGISTRY = "https://registry.npmjs.org/-/v1/search?text=";
 const SEARCH_SCORE_THRESHOLD = "0.025";
+const ITEMS_PER_PAGE = 8;
 
 type props = {};
 type state = { 
@@ -14,7 +16,11 @@ type state = {
   objects: any[],
   total: number,
   time: string,
-  lastSearchVal: string
+  lastSearchVal: string,
+  currentItems: any[],
+  pageCount: number, 
+  itemOffset: number,
+  itemsPerPage: number
 };
 
 class App extends React.Component<props, state> {
@@ -26,7 +32,11 @@ class App extends React.Component<props, state> {
       debugMode: "OFF", 
       objects: null, 
       total: null,
-      time: null
+      time: null,
+      currentItems:null,
+      pageCount: null,
+      itemOffset: null,
+      itemsPerPage: ITEMS_PER_PAGE
     };
 
     this.updateDebugger = this.updateDebugger.bind(this);
@@ -103,7 +113,7 @@ class App extends React.Component<props, state> {
 
     //Deal with empty input
     let searchURL;
-    if(!event || event.value.trim().length == 0) {
+    if(!event || event.value.trim().length === 0) {
       return;
     } else {
       //Search for the desired terms and set the default search size to 100
@@ -120,12 +130,29 @@ class App extends React.Component<props, state> {
 
           this.setState(data);
           this.setState({lastSearchVal: event.value.trim()})
+
+          //Trigger the page click to present new values for the pagination function
+          this.handlePageClick({selected:0})
+
         });
       } else {
         //Error Handling
       }
     })
   }
+
+  // Invoke when user click to request another page.
+  handlePageClick = (event) => {
+    //Find the items to show
+    const newOffset = event.selected * this.state.itemsPerPage % this.state.objects.length;
+    const newEnd = newOffset + this.state.itemsPerPage;
+    const newPageItems = this.state.objects.slice(newOffset, newEnd);
+    this.setState({
+      currentItems: newPageItems, 
+      itemOffset: newOffset, 
+      pageCount: Math.ceil(this.state.objects.length / this.state.itemsPerPage),
+    });
+  };
 
   render() {
     return (
@@ -160,8 +187,19 @@ class App extends React.Component<props, state> {
           </div>
         ):null}
         {(this.state.objects && this.state.objects.length > 0)?
-          (<SearchResults currentResults={this.state.objects} performSearch={this.performSearch} debugMode={this.state.debugMode}/>):null
+          (<SearchResults currentResults={this.state.currentItems} performSearch={this.performSearch} debugMode={this.state.debugMode}/>):null
         }
+        {(this.state.objects && this.state.objects.length > ITEMS_PER_PAGE)?
+          (<div className='overflow-hidden'>
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel="next"
+              previousLabel="previous"
+              onPageChange={this.handlePageClick}
+              pageRangeDisplayed={5}
+              pageCount={this.state.pageCount}
+              renderOnZeroPageCount={null}/>
+          </div>):null}
       </div>
     )
   }
