@@ -1,11 +1,7 @@
-## Before you start
-
 Ensure that the following have been installed
 - React 17.0.39
 - NodeJS 16.11.26
-- Typescript 4.6.2
 
-##Getting Started
 ### Step 1: Install dependencies
 
 #### NPM
